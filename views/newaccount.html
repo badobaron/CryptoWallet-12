@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>创建钱包</title>
+</head>
+<body>
+<div id="nav"></div>
+<script>
+    $('#nav').load('html/nav.html')
+</script>
+
+<div id="main" style="">
+    <h3>创建一个新钱包</h3>
+    <form method="POST" action="/newaccount">
+        <input type="text" placeholder="请输入密码" name="password">
+        <button type="submit">创建钱包</button>
+    </form>
+</div>
+</body>
+</html>
