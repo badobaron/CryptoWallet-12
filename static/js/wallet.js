@@ -48,5 +48,73 @@ function unlockAccountWithKeystore() {
     data.append('password', $('#unlock-account-password').val())
     alert(data)
     var urlStr = '/keystoreunlock'
-    
+    $.ajax({
+        url: urlStr,
+        type: 'post',
+        dataType: 'json',
+        contentType: false,
+        data: data,
+        processData: false,
+        success: function (res, status) {
+            alert(JSON.stringify(res) + status)
+            if (res.code == 0) {
+                configAccountInfo(res.data)
+            }
+        },
+
+        error: function (res, status) {
+            alert(JSON.stringify(res) + status)
+        }
+    })
 }
+
+$(document).ready(function () {
+    $('input[name=unlocktype]').change(function () {
+        if (this.value == 1) {
+            $('#unlock-account-keystore').show()
+            $('#unlock-account-privatekey').hide()
+        } else {
+            $('#unlock-account-keystore').hide()
+            $('#unlock-account-privatekey').show()
+        }
+    })
+
+    $('#send-transaction-form').validate({
+        rules: {
+            toaddress: {
+                required: true,
+            },
+            number: {
+                required: true,
+            },
+        },
+        messages: {
+            toaddress: {
+                required: '请输入对方地址',
+            },
+            number: {
+                required: '请输入转账金额',
+            },
+        },
+        submitHandler: function (form) {
+            var urlStr = '/sendtransaction'
+            alert('urlStr:' + urlStr)
+            $(form).ajaxSubmit({
+                url: urlStr,
+                type: 'post',
+                dataType: 'json',
+                success: function (res, status) {
+                    console.log(status + JSON.stringify(res))
+                    if (res.code == 0) {
+                        $('#transaction-complate-hash').text(res.data.transactionHash)
+                        $('#transaction-complate-blockhash').text(res.data.blockHash)
+                        $('#transaction-complate').show()
+                    }
+                },
+                error: function (res, status) {
+                    console.log(status + JSON.stringify(res))
+                }
+            })
+        }
+    })
+})
